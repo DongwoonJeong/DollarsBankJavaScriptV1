@@ -84,6 +84,48 @@ const functions = {
 
     rl.setPrompt('Choice should be in 1-6)  ');
     rl.prompt();
+
+    rl.on('line', (input) => {
+        const parsed=parseInt(input);
+        switch(parsed){
+            case 1:
+                console.log('4444444441');
+                functions.balanceCheck();
+                rl.close();
+                break;
+
+            case 2:
+                console.log('2');
+                functions.History();
+                rl.close();
+                break;
+
+            case 3:
+                console.log('3');
+                functions.updatePin();
+                rl.close();
+                break;
+
+            case 4:
+                console.log('4');
+                functions.Withdraw();
+                rl.close();
+                break;
+
+            case 5:
+                console.log('5');
+                functions.Deposit();
+                rl.close();
+                break;
+            case 6:
+                console.log('Sign out.');
+                functions.login();
+                rl.close();
+                break;
+                
+            }
+
+      });
 },
   balanceCheck: function () {
 
