@@ -31,10 +31,10 @@ const functions = {
   },
   login: function () {
     var rl = readline.createInterface(process.stdin, process.stdout);
-
     rl.question("Enter Account ID: ", (id) => {
       rl.question("Enter PIN: ", (pw) => {
-        for (var i = 0; i < account.length; i++) {
+        for (var i = 0; i <= account.length; i++) {
+            console.log(account);
           if (account[i].userId == id && account[i].PIN == pw) {
             rl.close();
             userNum = i;
@@ -145,6 +145,7 @@ const functions = {
             if(inputPin == inputPin2){
                 account[userNum].PIN = newpin;
             console.log("PIN UPDATED. PLEASE LOG IN AGAIN.");
+            rl.close();
             functions.login();
             }else{
                 console.log("New PIN does not match.");
@@ -224,7 +225,7 @@ const functions = {
             rl.question("Enter PIN: ", (newpin) => {
                 rl.question("Verify PIN: ", (newpin2) => {
                     if(newpin == newpin2){
-                    account.push({userId: actNum, PIN: newpin2, balance: deposit})
+                    account.push({userId: actNum, PIN: newpin2, balance: parseInt(deposit)})
                     console.log("new account created.")
                     history.push({
                         userId: actNum,
