@@ -135,9 +135,6 @@ const functions = {
     }
     functions.userMenu();
 },
-
-
-
   updatePin: function () {
     var rl = readline.createInterface(process.stdin, process.stdout);
     rl.question("Enter current PIN: ", (inputPin) => {
@@ -220,5 +217,34 @@ const functions = {
       functions.userMenu();
     });
   },
+  CreateUser: function (){
+    var rl = readline.createInterface(process.stdin, process.stdout);
+    rl.question("Enter account Number: ", (actNum) => {
+        rl.question("Enter initial deposit: ", (deposit) => {
+            rl.question("Enter PIN: ", (newpin) => {
+                rl.question("Verify PIN: ", (newpin2) => {
+
+                });
+            });
+        });
+    });
+    
+    
+    account.push
+    
+    
+    history.push({
+          userId: account[userNum].userId,
+          balance: account[userNum].balance,
+          message:
+          "$ " +
+          amount +" Withdraw "+
+          " to account " +
+          account[userNum].userId +
+          ". Balance $" +
+          account[userNum].balance,
+          TransactionDate: Date.now()
+        }
+  }
 };
 module.exports = functions;
