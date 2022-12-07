@@ -20,7 +20,7 @@ const functions = {
           functions.login();
         } else if (input == 2) {
           rl.close();
-          functions.addUser();
+          functions.CreateUser();
         } else {
           console.log("Please type valid number.");
           rl.close();
@@ -219,32 +219,32 @@ const functions = {
   },
   CreateUser: function (){
     var rl = readline.createInterface(process.stdin, process.stdout);
-    rl.question("Enter account Number: ", (actNum) => {
+    rl.question("Enter user Id Number: ", (actNum) => {
         rl.question("Enter initial deposit: ", (deposit) => {
             rl.question("Enter PIN: ", (newpin) => {
                 rl.question("Verify PIN: ", (newpin2) => {
-
+                    if(newpin == newpin2){
+                    account.push({userId: actNum, PIN: newpin2, balance: deposit})
+                    console.log("new account created.")
+                    history.push({
+                        userId: actNum,
+                        balance: deposit,
+                        message:
+                        "new account id "+actNum+" created with initial deposit $"+deposit,
+                        TransactionDate: Date.now()
+                      });
+                    rl.close();
+                    functions.menu();
+                    }else{
+                        console.log("PIN does not match. please do it again.");
+                        rl.close();
+                        functions.CreateUser();
+                    }
                 });
             });
         });
     });
-    
-    
-    account.push
-    
-    
-    history.push({
-          userId: account[userNum].userId,
-          balance: account[userNum].balance,
-          message:
-          "$ " +
-          amount +" Withdraw "+
-          " to account " +
-          account[userNum].userId +
-          ". Balance $" +
-          account[userNum].balance,
-          TransactionDate: Date.now()
-        }
+
   }
 };
 module.exports = functions;
