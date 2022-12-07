@@ -117,9 +117,11 @@ const functions = {
     });
   },
   balanceCheck: function () {
+    var rl = readline.createInterface(process.stdin, process.stdout);
     console.log('');
     console.log(' BALANCE: $' + account[userNum].balance);
     console.log('');
+    rl.close();
     functions.userMenu();
   },
   History: function () {
@@ -133,7 +135,18 @@ const functions = {
   },
   Deposit: function () {
         var rl = readline.createInterface(process.stdin, process.stdout);
-
-  },
-};
+        rl.question("Enter deposit amount: ", (amount) => {
+            if(amount < 0){
+                console.log('Deposit amount should be more then 0.');
+                rl.close();
+                functions.Deposit();
+            }else{
+                account[userNum].balance += parseInt(amount);
+                console.log(`Balance: ${account[userNum].balance}`);
+                history.push({userId: account[userNum].userId, balance: account[userNum].balance, message: 'Deposited Amount of $' + amount + ' to account ' + account[userNum].userId +  '. Balance = $' + account[userNum].balance});            }
+                rl.close();
+                functions.userMenu();
+  });
+}
+}
 module.exports = functions;
