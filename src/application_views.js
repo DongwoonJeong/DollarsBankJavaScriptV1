@@ -1,11 +1,12 @@
 const readline = require("readline");
 
 var account = [
-  { userId: "1", PIN: "1123", balance: 500.0 },
-  { userId: "2", PIN: "2123", balance: 100.0 },
+//   { userId: "1", PIN: "1", balance: 500.0 },
+//   { userId: "2", PIN: "2", balance: 100.0 },
 ];
 var history = [];
 var userNum = 0;
+
 const TransactionDate = new Date();
 const functions = {
   menu: function () {
@@ -24,7 +25,7 @@ const functions = {
         } else {
           console.log("Please type valid number.");
           rl.close();
-          functions.startMenu();
+          functions.menu();
         }
       }
     );
@@ -34,7 +35,7 @@ const functions = {
     rl.question("Enter Account ID: ", (id) => {
       rl.question("Enter PIN: ", (pw) => {
         for (var i = 0; i <= account.length; i++) {
-            console.log(account);
+          console.log(account);
           if (account[i].userId == id && account[i].PIN == pw) {
             rl.close();
             userNum = i;
@@ -75,11 +76,11 @@ const functions = {
     rl.on("line", (input) => {
       const parsed = parseInt(input);
       switch (parsed) {
-        case 1:     
-            rl.close();
+        case 1:
+          rl.close();
           functions.balanceCheck();
-     
-        break;
+
+          break;
         case 2:
           console.log("2");
           rl.close();
@@ -106,7 +107,7 @@ const functions = {
         case 6:
           console.log("Sign out.");
           rl.close();
-          functions.login();
+          functions.menu();
           break;
 
         default:
@@ -118,50 +119,46 @@ const functions = {
     });
   },
   balanceCheck: function () {
-    
     console.log("");
     console.log("Your BALANCE: $" + account[userNum].balance);
     console.log("");
     functions.userMenu();
   },
   History: function () {
-
-    for(var i=0; i<history.length; i++){
-        if(history[i].userId == account[userNum].userId){
-            console.log(history[i].message +' ' +TransactionDate);
-        }else{
-            console.log('no transaction has been made yet.');
-        }
+    for (var i = 0; i < history.length; i++) {
+      if (history[i].userId == account[userNum].userId) {
+        console.log(history[i].message + " " + TransactionDate);
+      } else {
+        console.log("no transaction has been made yet.");
+      }
     }
     functions.userMenu();
-},
+  },
   updatePin: function () {
     var rl = readline.createInterface(process.stdin, process.stdout);
     rl.question("Enter current PIN: ", (inputPin) => {
-      if(account[userNum].PIN == inputPin){
-        rl.question("Enter new PIN: ", (inputPin)=>{
-            var newpin = inputPin;
-            rl.question("Verify new PIN: ", (inputPin2)=>{
-            if(inputPin == inputPin2){
-                account[userNum].PIN = newpin;
-            console.log("PIN UPDATED. PLEASE LOG IN AGAIN.");
-            rl.close();
-            functions.login();
-            }else{
-                console.log("New PIN does not match.");
-                 rl.close();
-                 functions.updatePin();
+      if (account[userNum].PIN == inputPin) {
+        rl.question("Enter new PIN: ", (inputPin) => {
+          var newpin = inputPin;
+          rl.question("Verify new PIN: ", (inputPin2) => {
+            if (inputPin == inputPin2) {
+              account[userNum].PIN = newpin;
+              console.log("PIN UPDATED. PLEASE LOG IN AGAIN.");
+              rl.close();
+              functions.login();
+            } else {
+              console.log("New PIN does not match.");
+              rl.close();
+              functions.updatePin();
             }
+          });
         });
-    });
-      }else{
+      } else {
         console.log("Wrong PIN.");
         rl.close();
-        functions.login();
+        functions.updatePin();
       }
     });
-
-
   },
   Withdraw: function () {
     var rl = readline.createInterface(process.stdin, process.stdout);
@@ -173,19 +170,21 @@ const functions = {
           userId: account[userNum].userId,
           balance: account[userNum].balance,
           message:
-          "$ " +
-          amount +" Withdraw "+
-          " to account " +
-          account[userNum].userId +
-          ". Balance $" +
-          account[userNum].balance,
-          TransactionDate: Date.now()
+            "$ " +
+            amount +
+            " Withdraw " +
+            " from account " +
+            account[userNum].userId +
+            ". Balance $" +
+            account[userNum].balance,
+          TransactionDate: Date.now(),
         });
-      rl.close();
-      functions.userMenu();
-
+        rl.close();
+        functions.userMenu();
       } else {
-        console.log("Withdraw amount should be more then 0, more then the remaining balance.");
+        console.log(
+          "Withdraw amount should be more then 0, more then the remaining balance."
+        );
         rl.close();
         functions.Withdraw();
       }
@@ -206,46 +205,54 @@ const functions = {
           balance: account[userNum].balance,
           message:
             "$ " +
-            amount +" Deposited "+
+            amount +
+            " Deposited " +
             " to account " +
             account[userNum].userId +
             ". Balance $" +
             account[userNum].balance,
-            TransactionDate: Date.now()
+          TransactionDate: Date.now(),
         });
       }
       rl.close();
       functions.userMenu();
     });
   },
-  CreateUser: function (){
+  CreateUser: function () {
     var rl = readline.createInterface(process.stdin, process.stdout);
     rl.question("Enter user Id Number: ", (actNum) => {
-        rl.question("Enter initial deposit: ", (deposit) => {
-            rl.question("Enter PIN: ", (newpin) => {
-                rl.question("Verify PIN: ", (newpin2) => {
-                    if(newpin == newpin2){
-                    account.push({userId: actNum, PIN: newpin2, balance: parseInt(deposit)})
-                    console.log("new account created.")
-                    history.push({
-                        userId: actNum,
-                        balance: deposit,
-                        message:
-                        "new account id "+actNum+" created with initial deposit $"+deposit,
-                        TransactionDate: Date.now()
-                      });
-                    rl.close();
-                    functions.menu();
-                    }else{
-                        console.log("PIN does not match. please do it again.");
-                        rl.close();
-                        functions.CreateUser();
-                    }
-                });
-            });
+      rl.question("Enter initial deposit: ", (deposit) => {
+        rl.question("Enter PIN: ", (newpin) => {
+          rl.question("Verify PIN: ", (newpin2) => {
+            if (newpin == newpin2) {
+              account.push({
+                userId: actNum,
+                PIN: newpin2,
+                balance: parseInt(deposit),
+              });
+              console.log("new account created.");
+              history.push({
+                userId: actNum,
+                balance: deposit,
+                message:
+                  "new account id " +
+                  actNum +
+                  " created with initial deposit $" +
+                  deposit,
+                TransactionDate: Date.now(),
+              });
+              rl.close();
+              var newCall = new functions.menu();
+              newCall;
+            } else {
+              console.log("PIN does not match. please do it again.");
+              rl.close();
+              functions.CreateUser();
+            }
+          });
         });
+      });
     });
-
   }
 };
 module.exports = functions;

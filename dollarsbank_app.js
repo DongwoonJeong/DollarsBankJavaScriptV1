@@ -1,4 +1,2 @@
-
-const app = require('./src/application_views.js').default;
-
+const app = require('./src/application_views.js');
 app.menu();
