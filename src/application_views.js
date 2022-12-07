@@ -5,7 +5,7 @@ var account = [
   { userId: "2", PIN: "2123", balance: 100.0 },
 ];
 var history = [];
-
+var userNum =0;
 const functions = {
   menu: function () {
     var rl = readline.createInterface(process.stdin, process.stdout);
@@ -36,7 +36,8 @@ const functions = {
         for (var i = 0; i < account.length; i++) {
           if (account[i].userId == id && account[i].PIN == pw) {
             rl.close();
-            console.log("Welcome!");
+            userNum = i;
+            console.log(`Welcome! ${account[userNum].userId}`);
             functions.userMenu();
             break;
           } else if (account[i].userId == id && account[i].PIN != pw) {
@@ -76,7 +77,7 @@ const functions = {
           console.log("4444444441");
           functions.balanceCheck();
           rl.close();
-          break;
+          
 
         case 2:
           console.log("2");
@@ -115,10 +116,24 @@ const functions = {
       }
     });
   },
-  balanceCheck: function () {},
-  History: function () {},
-  updatePin: function () {},
-  Withdraw: function () {},
-  Deposit: function () {},
+  balanceCheck: function () {
+    console.log('');
+    console.log(' BALANCE: $' + account[userNum].balance);
+    console.log('');
+    functions.userMenu();
+  },
+  History: function () {
+
+  },
+  updatePin: function () {
+
+  },
+  Withdraw: function () {
+
+  },
+  Deposit: function () {
+        var rl = readline.createInterface(process.stdin, process.stdout);
+
+  },
 };
 module.exports = functions;
