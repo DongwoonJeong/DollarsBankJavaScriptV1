@@ -6,6 +6,7 @@ var account = [
 ];
 var history = [];
 var userNum = 0;
+const TransactionDate = new Date();
 const functions = {
   menu: function () {
     var rl = readline.createInterface(process.stdin, process.stdout);
@@ -58,6 +59,7 @@ const functions = {
   userMenu: function () {
     var rl = readline.createInterface(process.stdin, process.stdout);
 
+    console.log("");
     console.log("Transaction Menu");
     console.log("Enter 1: Account Balance Check");
     console.log("Enter 2: Print Transactions");
@@ -76,7 +78,7 @@ const functions = {
         case 1:
           functions.balanceCheck();
           rl.close();
-
+        break;
         case 2:
           console.log("2");
           rl.close();
@@ -115,37 +117,71 @@ const functions = {
     });
   },
   balanceCheck: function () {
-    var rl = readline.createInterface(process.stdin, process.stdout);
+    
     console.log("");
     console.log(" BALANCE: $" + account[userNum].balance);
     console.log("");
-    rl.close();
     functions.userMenu();
   },
-  History: function () {},
-  updatePin: function () {},
+  History: function () {
+
+    for(var i=0; i<history.length; i++){
+        if(history[i].userId == account[userNum].userId){
+            console.log(history[i].message +' ' +TransactionDate);
+        }else{
+            console.log('no transaction has been made yet.');
+        }
+    }
+    functions.userMenu();
+},
+
+
+
+  updatePin: function () {
+    var rl = readline.createInterface(process.stdin, process.stdout);
+    rl.question("Enter current PIN: ", (inputPin) => {
+      if(account[userNum].PIN == inputPin){
+        rl.question("Enter new PIN: ", (inputPin)=>{
+            account[userNum].PIN = inputPin
+            console.log("PIN UPDATED. PLEASE LOG IN AGAIN.");
+            rl.close();
+            functions.login();
+        });
+      }else{
+        console.log("Different PIN.");
+        rl.close();
+        functions.updatePin();
+      }
+    });
+
+
+  },
   Withdraw: function () {
     var rl = readline.createInterface(process.stdin, process.stdout);
     rl.question("Enter withdraw amount: ", (amount) => {
-      if (amount < 0) {
-        console.log("Deposit amount should be more then 0.");
-        rl.close();
-        functions.Deposit();
-      } else {
+      if (account[userNum].balance > amount && amount > 0) {
         account[userNum].balance -= parseInt(amount);
         console.log(`Balance: ${account[userNum].balance}`);
         history.push({
           userId: account[userNum].userId,
           balance: account[userNum].balance,
           message:
-            "Withdraw Amount of $" +
-            amount +
-            ". Balance = " +
-            account[userNum].balance,
+          "$ " +
+          amount +" Withdraw "+
+          " to account " +
+          account[userNum].userId +
+          ". Balance $" +
+          account[userNum].balance,
+          TransactionDate: Date.now()
         });
-      }
       rl.close();
       functions.userMenu();
+
+      } else {
+        console.log("Withdraw amount should be more then 0, more then the remaining balance.");
+        rl.close();
+        functions.Withdraw();
+      }
     });
   },
   Deposit: function () {
@@ -162,12 +198,13 @@ const functions = {
           userId: account[userNum].userId,
           balance: account[userNum].balance,
           message:
-            "Deposited Amount of $" +
-            amount +
+            "$ " +
+            amount +" Deposited "+
             " to account " +
             account[userNum].userId +
-            ". Balance = $" +
+            ". Balance $" +
             account[userNum].balance,
+            TransactionDate: Date.now()
         });
       }
       rl.close();
