@@ -75,9 +75,10 @@ const functions = {
     rl.on("line", (input) => {
       const parsed = parseInt(input);
       switch (parsed) {
-        case 1:
+        case 1:     
+            rl.close();
           functions.balanceCheck();
-          rl.close();
+     
         break;
         case 2:
           console.log("2");
@@ -119,7 +120,7 @@ const functions = {
   balanceCheck: function () {
     
     console.log("");
-    console.log(" BALANCE: $" + account[userNum].balance);
+    console.log("Your BALANCE: $" + account[userNum].balance);
     console.log("");
     functions.userMenu();
   },
@@ -142,15 +143,23 @@ const functions = {
     rl.question("Enter current PIN: ", (inputPin) => {
       if(account[userNum].PIN == inputPin){
         rl.question("Enter new PIN: ", (inputPin)=>{
-            account[userNum].PIN = inputPin
+            var newpin = inputPin;
+            rl.question("Verify new PIN: ", (inputPin2)=>{
+            if(inputPin == inputPin2){
+                account[userNum].PIN = newpin;
             console.log("PIN UPDATED. PLEASE LOG IN AGAIN.");
-            rl.close();
             functions.login();
+            }else{
+                console.log("New PIN does not match.");
+                 rl.close();
+                 functions.updatePin();
+            }
         });
+    });
       }else{
-        console.log("Different PIN.");
+        console.log("Wrong PIN.");
         rl.close();
-        functions.updatePin();
+        functions.login();
       }
     });
 
