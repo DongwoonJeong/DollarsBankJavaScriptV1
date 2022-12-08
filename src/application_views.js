@@ -1,14 +1,14 @@
 const readline = require("readline");
 
 var account = [
-//   { userId: "1", PIN: "1", balance: 500.0 },
-//   { userId: "2", PIN: "2", balance: 100.0 },
+  //   { userId: "1", PIN: "1", balance: 500.0 },
+  //   { userId: "2", PIN: "2", balance: 100.0 },
 ];
 var history = [];
 var userNum = 0;
 
 const TransactionDate = new Date();
-const functions = {
+const atm = {
   menu: function () {
     var rl = readline.createInterface(process.stdin, process.stdout);
 
@@ -18,44 +18,57 @@ const functions = {
       (input) => {
         if (input == 1) {
           rl.close();
-          functions.login();
+         atm.login();
+         
         } else if (input == 2) {
           rl.close();
-          functions.CreateUser();
+          atm.CreateUser();
+        
         } else {
           console.log("Please type valid number.");
           rl.close();
-          functions.menu();
+         atm.menu();
+         
         }
       }
     );
   },
   login: function () {
     var rl = readline.createInterface(process.stdin, process.stdout);
+    console.log(' ');
     rl.question("Enter Account ID: ", (id) => {
       rl.question("Enter PIN: ", (pw) => {
-        for (var i = 0; i <= account.length; i++) {
-          console.log(account);
+        if(account.length == 0){
+          console.log("No account found in the system. create an account.")
+          console.log(' ');
+          rl.close();
+          atm.CreateUser();
+        }else{
+        for (let i = 0; i < account.length; i++) {
+          
+
           if (account[i].userId == id && account[i].PIN == pw) {
+           
             rl.close();
             userNum = i;
-            console.log(`Welcome! ${account[userNum].userId}`);
-            functions.userMenu();
-            break;
-          } else if (account[i].userId == id && account[i].PIN != pw) {
-            console.log("incorrect password");
-            rl.close();
-            functions.login();
-            break;
-          } else {
-            console.log("Please check the info again.");
-            rl.close();
-            functions.login();
+            console.log(' ');
+            console.log(`Account ${account[userNum].userId} logged in.`);
+            console.log(' ');
+            atm.userMenu();
             break;
           }
+        if (account[i].userId != id || account[i].PIN != pw) {
+          console.log(' ');
+            console.log("incorrect password");
+            console.log(' ');
+            rl.close();
+            atm.login(); 
+          }
         }
+      }
       });
     });
+  
   },
   userMenu: function () {
     var rl = readline.createInterface(process.stdin, process.stdout);
@@ -77,43 +90,51 @@ const functions = {
       const parsed = parseInt(input);
       switch (parsed) {
         case 1:
-          rl.close();
-          functions.balanceCheck();
+          console.log("");  
+          console.log("Balance check");
+        rl.close();
+          atm.balanceCheck();
 
           break;
         case 2:
-          console.log("2");
+          console.log("");  
+          console.log("Transaction History");
           rl.close();
-          functions.History();
+          atm.History();
+          
           break;
 
         case 3:
-          console.log("3");
+          console.log("");  
+          console.log("Update Pin");
           rl.close();
-          functions.updatePin();
+          atm.updatePin();
           break;
 
         case 4:
-          console.log("4");
+          console.log("");  
+          console.log("Withdraw");
           rl.close();
-          functions.Withdraw();
+          atm.Withdraw();
           break;
 
         case 5:
-          console.log("5");
+          console.log("");  
+          console.log("Deposit");
           rl.close();
-          functions.Deposit();
+          atm.Deposit();
           break;
         case 6:
-          console.log("Sign out.");
+          console.log("");  
+          console.log("bye.");
           rl.close();
-          functions.menu();
+          atm.menu();
           break;
 
         default:
           console.log("Wrong input.");
-          functions.userMenu();
           rl.close();
+          atm.userMenu();
           break;
       }
     });
@@ -122,20 +143,26 @@ const functions = {
     console.log("");
     console.log("Your BALANCE: $" + account[userNum].balance);
     console.log("");
-    functions.userMenu();
+    atm.userMenu();
   },
   History: function () {
+    var found = false;
+    console.log("");
     for (var i = 0; i < history.length; i++) {
       if (history[i].userId == account[userNum].userId) {
+        found = true;
         console.log(history[i].message + " " + TransactionDate);
-      } else {
-        console.log("no transaction has been made yet.");
       }
+       if(found = false){
+        
+        console.log("no transaction has been made yet.");
     }
-    functions.userMenu();
+  }
+    atm.userMenu();
   },
   updatePin: function () {
     var rl = readline.createInterface(process.stdin, process.stdout);
+    console.log("");
     rl.question("Enter current PIN: ", (inputPin) => {
       if (account[userNum].PIN == inputPin) {
         rl.question("Enter new PIN: ", (inputPin) => {
@@ -143,25 +170,28 @@ const functions = {
           rl.question("Verify new PIN: ", (inputPin2) => {
             if (inputPin == inputPin2) {
               account[userNum].PIN = newpin;
+              console.log("");
               console.log("PIN UPDATED. PLEASE LOG IN AGAIN.");
               rl.close();
-              functions.login();
+              atm.login();
             } else {
               console.log("New PIN does not match.");
               rl.close();
-              functions.updatePin();
+              atm.updatePin();
             }
           });
         });
       } else {
-        console.log("Wrong PIN.");
+        console.log("");
+        console.log("Wrong PIN try again.");
         rl.close();
-        functions.updatePin();
+        atm.updatePin();
       }
     });
   },
   Withdraw: function () {
     var rl = readline.createInterface(process.stdin, process.stdout);
+    console.log("");
     rl.question("Enter withdraw amount: ", (amount) => {
       if (account[userNum].balance > amount && amount > 0) {
         account[userNum].balance -= parseInt(amount);
@@ -173,30 +203,31 @@ const functions = {
             "$ " +
             amount +
             " Withdraw " +
-            " from account " +
+            " from account id" +
             account[userNum].userId +
             ". Balance $" +
             account[userNum].balance,
           TransactionDate: Date.now(),
         });
         rl.close();
-        functions.userMenu();
+        atm.userMenu();
       } else {
         console.log(
           "Withdraw amount should be more then 0, more then the remaining balance."
         );
         rl.close();
-        functions.Withdraw();
+        atm.Withdraw();
       }
     });
   },
   Deposit: function () {
     var rl = readline.createInterface(process.stdin, process.stdout);
+    console.log("");
     rl.question("Enter deposit amount: ", (amount) => {
       if (amount < 0) {
         console.log("Deposit amount should be more then 0.");
         rl.close();
-        functions.Deposit();
+        atm.Deposit();
       } else {
         account[userNum].balance += parseInt(amount);
         console.log(`Balance: ${account[userNum].balance}`);
@@ -207,7 +238,7 @@ const functions = {
             "$ " +
             amount +
             " Deposited " +
-            " to account " +
+            " to account id" +
             account[userNum].userId +
             ". Balance $" +
             account[userNum].balance,
@@ -215,11 +246,12 @@ const functions = {
         });
       }
       rl.close();
-      functions.userMenu();
+      atm.userMenu();
     });
   },
   CreateUser: function () {
     var rl = readline.createInterface(process.stdin, process.stdout);
+    console.log("");
     rl.question("Enter user Id Number: ", (actNum) => {
       rl.question("Enter initial deposit: ", (deposit) => {
         rl.question("Enter PIN: ", (newpin) => {
@@ -230,6 +262,7 @@ const functions = {
                 PIN: newpin2,
                 balance: parseInt(deposit),
               });
+              console.log(' ');
               console.log("new account created.");
               history.push({
                 userId: actNum,
@@ -242,17 +275,17 @@ const functions = {
                 TransactionDate: Date.now(),
               });
               rl.close();
-              var newCall = new functions.menu();
-              newCall;
+              atm.menu();
             } else {
+              console.log("");
               console.log("PIN does not match. please do it again.");
               rl.close();
-              functions.CreateUser();
+              atm.CreateUser();
             }
           });
         });
       });
     });
-  }
+  },
 };
-module.exports = functions;
+module.exports = atm;
