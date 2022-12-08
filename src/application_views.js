@@ -18,57 +18,52 @@ const atm = {
       (input) => {
         if (input == 1) {
           rl.close();
-         atm.login();
-         
+          atm.login();
         } else if (input == 2) {
           rl.close();
           atm.CreateUser();
-        
         } else {
           console.log("Please type valid number.");
           rl.close();
-         atm.menu();
-         
+          atm.menu();
         }
       }
     );
   },
   login: function () {
     var rl = readline.createInterface(process.stdin, process.stdout);
-    console.log(' ');
+    console.log(" ");
+    var found = false;
     rl.question("Enter Account ID: ", (id) => {
       rl.question("Enter PIN: ", (pw) => {
-        if(account.length == 0){
-          console.log("No account found in the system. create an account.")
-          console.log(' ');
+        if (account.length == 0) {
+          console.log("No account found in the system. create an account.");
+          console.log(" ");
           rl.close();
           atm.CreateUser();
-        }else{
-        for (let i = 0; i < account.length; i++) {
-          
-
-          if (account[i].userId == id && account[i].PIN == pw) {
-           
-            rl.close();
-            userNum = i;
-            console.log(' ');
-            console.log(`Account ${account[userNum].userId} logged in.`);
-            console.log(' ');
-            atm.userMenu();
-            break;
+        } else {
+          for (let i = 0; i < account.length; i++) {
+            if (account[i].userId == id && account[i].PIN == pw) {
+              found = true;
+              rl.close();
+              userNum = i;
+              console.log(" ");
+              console.log(`Account ${account[userNum].userId} logged in.`);
+              console.log(" ");
+              atm.userMenu();
+              break;
+            }
           }
-        if (account[i].userId != id || account[i].PIN != pw) {
-          console.log(' ');
-            console.log("incorrect password");
-            console.log(' ');
+          if (!found) {
+            console.log(" ");
+            console.log("id or password incorrect.");
+            console.log(" ");
             rl.close();
-            atm.login(); 
+            atm.login();
           }
         }
-      }
       });
     });
-  
   },
   userMenu: function () {
     var rl = readline.createInterface(process.stdin, process.stdout);
@@ -90,42 +85,42 @@ const atm = {
       const parsed = parseInt(input);
       switch (parsed) {
         case 1:
-          console.log("");  
+          console.log("");
           console.log("Balance check");
-        rl.close();
+          rl.close();
           atm.balanceCheck();
 
           break;
         case 2:
-          console.log("");  
+          console.log("");
           console.log("Transaction History");
           rl.close();
           atm.History();
-          
+
           break;
 
         case 3:
-          console.log("");  
+          console.log("");
           console.log("Update Pin");
           rl.close();
           atm.updatePin();
           break;
 
         case 4:
-          console.log("");  
+          console.log("");
           console.log("Withdraw");
           rl.close();
           atm.Withdraw();
           break;
 
         case 5:
-          console.log("");  
+          console.log("");
           console.log("Deposit");
           rl.close();
           atm.Deposit();
           break;
         case 6:
-          console.log("");  
+          console.log("");
           console.log("bye.");
           rl.close();
           atm.menu();
@@ -153,11 +148,10 @@ const atm = {
         found = true;
         console.log(history[i].message + " " + TransactionDate);
       }
-       if(found = false){
-        
+      if ((found = false)) {
         console.log("no transaction has been made yet.");
+      }
     }
-  }
     atm.userMenu();
   },
   updatePin: function () {
@@ -262,7 +256,7 @@ const atm = {
                 PIN: newpin2,
                 balance: parseInt(deposit),
               });
-              console.log(' ');
+              console.log(" ");
               console.log("new account created.");
               history.push({
                 userId: actNum,
